@@ -1,0 +1,47 @@
+{
+  "MONEDA": [
+    "DOLARES",
+    "SOLES"
+  ],
+  "BANCO": [
+    "BBVA",
+    "BCP",
+    "BLACK"
+  ],
+  "ACEPTANTE": [
+    "BLACK",
+    "COLCHONES VIVE",
+    "DREAM TEAM",
+    "GRUPO ISD"
+  ],
+  "PRODUCTO": [
+    "DEUDA BANCOS",
+    "EFACT",
+    "GRAPAS",
+    "IMPUESTOS",
+    "IRIS SOLEDAD",
+    "MANGAS",
+    "NOTEX",
+    "PABILO",
+    "PASTAS",
+    "PLANILLA"
+  ],
+  "GIRADOR": [
+    "ALQUILERES IMPUESTOS",
+    "EFACT SAC",
+    "GUANGZHOU HONGDI NEW MATERIAL CO. LTD",
+    "IMPORTADORA MASTER SAC / VEDONA",
+    "IMPUESTOS PLANILLA",
+    "IRIS SOLEDAD DE LA CRUZ / TERRENO - CASA",
+    "LAUREANO ROQUE SAC",
+    "MALBEZ S.R.LTDA",
+    "ONYX INTERNATIONAL SAC / S&M",
+    "PLANILLA - HABERES",
+    "PRESTAMO BCP / 90K + 13.509 INTERES",
+    "SERVICIOS GRAFICOS FA EIRL",
+    "SIN GIRADOR"
+  ],
+  "CONDICION DEUDA": [
+    "PENDIENTE DE PAGO"
+  ]
+}

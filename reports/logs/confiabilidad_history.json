@@ -1,0 +1,55 @@
+{
+  "records": [
+    {
+      "timestamp": "2026-03-19T16:32:15.273910",
+      "confiabilidad": 95.2,
+      "total_records": 171,
+      "valid_records": 160,
+      "invalid_records": 11,
+      "source_file": "SALDO - FLUJO DE PAGOS 2026.xlsx",
+      "issues": [
+        "1 valores inválidos"
+      ],
+      "certified": false
+    },
+    {
+      "timestamp": "2026-03-19T16:32:38.810174",
+      "confiabilidad": 95.2,
+      "total_records": 171,
+      "valid_records": 160,
+      "invalid_records": 11,
+      "source_file": "SALDO - FLUJO DE PAGOS 2026.xlsx",
+      "issues": [
+        "1 valores inválidos"
+      ],
+      "certified": false
+    },
+    {
+      "timestamp": "2026-03-19T16:33:09.157014",
+      "confiabilidad": 50.0,
+      "total_records": 171,
+      "valid_records": 0,
+      "invalid_records": 171,
+      "source_file": "SALDO - FLUJO DE PAGOS 2026.xlsx",
+      "issues": [
+        "Faltan: ['NUMERO UNICO', 'IMPORTE', 'Fecha de Vencimiento', 'MONEDA', 'BANCO']"
+      ],
+      "certified": false
+    },
+    {
+      "timestamp": "2026-03-19T16:33:23.030591",
+      "confiabilidad": 100.0,
+      "total_records": 171,
+      "valid_records": 160,
+      "invalid_records": 11,
+      "source_file": "SALDO - FLUJO DE PAGOS 2026.xlsx",
+      "issues": [],
+      "certified": true
+    }
+  ],
+  "last_updated": "2026-03-19T16:33:23.030706",
+  "total_runs": 4,
+  "avg_confiabilidad": 85.1,
+  "min_confiabilidad": 50.0,
+  "max_confiabilidad": 100.0
+}

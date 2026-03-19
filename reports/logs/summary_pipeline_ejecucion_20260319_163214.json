@@ -1,0 +1,96 @@
+{
+  "operation": "pipeline_ejecucion",
+  "timestamp": "2026-03-19T16:32:14.990608",
+  "events": [
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Iniciando pipeline de limpieza",
+      "data": {
+        "version": "2.0"
+      }
+    },
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Cargando datos",
+      "data": {}
+    },
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Datos cargados",
+      "data": {
+        "filas": 171
+      }
+    },
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Validación inicial completada",
+      "data": {
+        "confiabilidad": 57.1
+      }
+    },
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Problemas detectados en validación inicial",
+      "data": {
+        "problemas": [
+          "IDs duplicados: 150",
+          "Fechas inválidas: 7",
+          "Negativos: 0, >365: 38",
+          "Inválidas: ['MONEDA']",
+          "Inválidos: ['BANCO']",
+          "1 valores inválidos: ['ACEPTANTE']",
+          "1 valores inválidos: ['PRODUCTO']",
+          "2 valores inválidos",
+          "5 filas duplicadas"
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Limpieza completada",
+      "data": {
+        "correcciones": 12
+      }
+    },
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Pipeline completado",
+      "data": {
+        "confiabilidad_inicial": 57.1,
+        "confiabilidad_final": 95.2,
+        "filas_originales": 171,
+        "filas_limpias": 160,
+        "correcciones": 12,
+        "archivo_csv": "/home/deivdev/Desktop/Data-Analytics/data/clean/datos_limpios.csv",
+        "archivo_xlsx": "/home/deivdev/Desktop/Data-Analytics/data/clean/datos_limpios.xlsx"
+      }
+    },
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Historial de confiabilidad actualizado",
+      "data": {}
+    },
+    {
+      "timestamp": "2026-03-19T16:32:14.990608",
+      "operation": "pipeline_ejecucion",
+      "message": "Alerta de calidad generada",
+      "data": {
+        "timestamp": "2026-03-19T16:32:15.274197",
+        "level": "WARNING",
+        "confiabilidad": 95.2,
+        "threshold": 99.9,
+        "message": "Calidad de datos BAJO del umbral: 95.2% < 99.9%",
+        "action_required": true
+      }
+    }
+  ],
+  "total_events": 9
+}

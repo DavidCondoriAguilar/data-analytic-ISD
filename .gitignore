@@ -1,0 +1,40 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Data files (keep clean, ignore raw xlsx)
+data/raw/*.xlsx
+data/raw/*.xls
+*.xlsx
+!requirements.txt
+
+# Python cache
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# OS files
+.DS_Store
+Thumbs.db
+.~lock.*
+
+# Streamlit
+.streamlit/secrets.toml
