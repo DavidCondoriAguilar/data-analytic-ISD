@@ -1,69 +1,100 @@
 # Sueño Dorado - Control de Pagos
 
-## ¿Qué hace?
+## Descripción
+Dashboard de BI para el control de cartera de pagos de Sueño Dorado / ISD. Valida, limpia y visualiza datos de Excel con certificación de confiabilidad 99.9%.
 
-Automatiza la validación y limpieza de datos de Excel para el control de cartera de pagos.
+## Características
+- Dashboard interactivo con Streamlit
+- Tema oscuro minimalista
+- Filtros: Banco, Moneda, Girador, Fecha
+- Gráficos: Evolución, Por Banco, Distribución, Antigüedad, Girador, Producto
+- Descarga de reportes en CSV y Excel
+- Certificación de datos 99.9%
 
-## Resultados Actuales
+## Deployment en Streamlit Cloud
 
-| Métrica | Valor |
-|---------|-------|
-| Registros limpiados | 160 / 171 |
-| Confiabilidad | **100%** ✓ |
-| Cartera Soles | S/. 3,229,280 |
-| Cartera Dólares | $1,335,569 |
+### Paso 1: Ir a Streamlit Cloud
+1. Abre: https://streamlit.io/cloud
+2. Inicia sesión con tu cuenta de GitHub
 
-## Comandos
+### Paso 2: Deploy
+1. Click en **"New app"**
+2. Selecciona:
+   - **Repository:** `DavidCondoriAguilar/data-analytic-ISD`
+   - **Branch:** `main`
+   - **Main file path:** `app.py`
+3. Click en **"Deploy!"**
+
+### Paso 3: Esperar
+- El deploy toma ~2-3 minutos
+- Recibirás una URL como: `https://tu-app.streamlit.app`
+
+### Paso 4: Compartir
+- Comparte la URL con tu gerente
+- Él puede ver el dashboard desde cualquier navegador
+
+## Desarrollo Local
+
+```bash
+# Clonar repo
+git clone https://github.com/DavidCondoriAguilar/data-analytic-ISD.git
+cd data-analytic-ISD
+
+# Crear entorno virtual
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# o: venv\Scripts\activate  # Windows
+
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Correr dashboard
+streamlit run app.py
+
+# Correr tests
+pytest src/tests/ -q
+```
+
+## Estructura del Proyecto
+
+```
+├── app.py                    # Dashboard principal (raíz para deploy)
+├── src/
+│   ├── dashboard/app.py       # Dashboard (copia en src)
+│   ├── data/
+│   │   ├── loader.py         # Carga datos
+│   │   ├── validator.py      # 21 validaciones
+│   │   ├── cleaner.py        # Limpieza automática
+│   │   ├── audit.py          # Logging y tracking
+│   │   └── certificar.py     # Reporte de certificación
+│   └── tests/                # 45 tests automatizados
+├── data/clean/               # Datos certificados
+├── config/                   # Configuraciones
+└── requirements.txt          # Dependencias
+```
+
+## Comandos Rápidos
 
 ```bash
 # Limpiar y certificar datos
-./venv/bin/python src/data/clean_pipeline.py
+python src/data/clean_pipeline.py
 
-# Generar reporte de certificación
-./venv/bin/python src/data/certificar.py
+# Generar reporte
+python src/data/certificar.py
 
-# Ver dashboard (BI)
-./venv/bin/streamlit run src/dashboard/app.py
+# Ver dashboard
+streamlit run app.py
 
-# Ejecutar pruebas
-./venv/bin/python -m pytest src/tests/ -q
+# Tests
+pytest src/tests/ -q
 ```
 
-## Proceso Automático
+## Tecnologías
+- Python 3.12
+- Streamlit
+- Pandas
+- Plotly
+- openpyxl
 
-1. **Carga** - Lee Excel original
-2. **Valida** - 21 checks de calidad
-3. **Limpia** - Corrige/marca problemas
-4. **Certifica** - Confirma 99.9%+ confiabilidad
-5. **Alerta** - Notifica si calidad baja
-
-## Arquitectura
-
-```
-data/raw/           → Excel original
-data/clean/         → Datos certificados
-reports/logs/       → Auditoría e historial
-config/valid_values.json → Valores válidos (extraídos de data limpia)
-```
-
-## Validaciones Incluidas
-
-- IDs únicos
-- Fechas válidas
-- Rangos lógicos (días vencidos 0-365)
-- Monedas/Bancos/Giradores correctos
-- Detección de outliers
-- Consistencia cruzada
-
-## Para Cambios
-
-Si el Excel cambia, regenerar valores válidos:
-```bash
-./venv/bin/python -c "
-import pandas as pd, json
-df = pd.read_excel('data/clean/datos_limpios.xlsx')
-valores = {col: sorted(df[col].dropna().str.strip().str.upper().unique().tolist()) 
-           for col in ['MONEDA','BANCO','ACEPTANTE','PRODUCTO','GIRADOR']}
-with open('config/valid_values.json','w') as f: json.dump(valores, f, indent=2)
-"
-```
+## Autor
+David Condori Aguilar
