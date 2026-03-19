@@ -252,7 +252,9 @@ def get_trend_indicator(current, previous):
 
 @st.cache_data
 def cargar_datos():
-    df = pd.read_excel('data/clean/datos_limpios.xlsx')
+    import os
+    excel_path = os.environ.get('DATA_PATH', 'data/clean/datos_limpios.xlsx')
+    df = pd.read_excel(excel_path)
     
     df = df[df['CONDICION DEUDA'] == 'PENDIENTE DE PAGO']
     df['Fecha de Vencimiento'] = pd.to_datetime(df['Fecha de Vencimiento'], errors='coerce')
