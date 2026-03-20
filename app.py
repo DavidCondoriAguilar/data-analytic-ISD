@@ -328,31 +328,47 @@ with st.sidebar:
     st.markdown(f"**Total registros:** {len(df):,}")
 
 
-# === APPLY FILTERS ===
-df_f = df[
-    (df['BANCO'].isin(filtro_banco)) & 
-    (df['MONEDA'].isin(filtro_moneda)) &
-    (df['GIRADOR'].isin(filtro_girador)) &
-    (df['Fecha de Vencimiento'] >= pd.to_datetime(fecha_inicio)) &
-    (df['Fecha de Vencimiento'] <= pd.to_datetime(fecha_fin))
-].copy()
-
 # === FILTRAR POR PERIODO (ATAJO) ===
-if filtro_periodo == "1 Mes":
-    fecha_limite = fecha_fin - timedelta(days=30)
-elif filtro_periodo == "2 Meses":
-    fecha_limite = fecha_fin - timedelta(days=60)
-elif filtro_periodo == "3 Meses":
-    fecha_limite = fecha_fin - timedelta(days=90)
-elif filtro_periodo == "6 Meses":
-    fecha_limite = fecha_fin - timedelta(days=180)
-elif filtro_periodo == "Este Año":
-    fecha_limite = datetime(fecha_fin.year, 1, 1).date()
-else:
-    fecha_limite = None
+hoy = datetime.now().date()
 
-if fecha_limite:
-    df_f = df_f[df_f['Fecha de Vencimiento'] >= pd.to_datetime(fecha_limite)]
+if filtro_periodo == "1 Mes":
+    fecha_ini = hoy - timedelta(days=30)
+    fecha_fin_calc = hoy
+elif filtro_periodo == "2 Meses":
+    fecha_ini = hoy - timedelta(days=60)
+    fecha_fin_calc = hoy
+elif filtro_periodo == "3 Meses":
+    fecha_ini = hoy - timedelta(days=90)
+    fecha_fin_calc = hoy
+elif filtro_periodo == "6 Meses":
+    fecha_ini = hoy - timedelta(days=180)
+    fecha_fin_calc = hoy
+elif filtro_periodo == "Este Año":
+    fecha_ini = datetime(hoy.year, 1, 1).date()
+    fecha_fin_calc = hoy
+else:
+    fecha_ini = None
+    fecha_fin_calc = None
+
+# === APLICAR FILTROS ===
+if fecha_ini is not None:
+    # Usar fechas del periodo
+    df_f = df[
+        (df['BANCO'].isin(filtro_banco)) & 
+        (df['MONEDA'].isin(filtro_moneda)) &
+        (df['GIRADOR'].isin(filtro_girador)) &
+        (df['Fecha de Vencimiento'] >= pd.to_datetime(fecha_ini)) &
+        (df['Fecha de Vencimiento'] <= pd.to_datetime(fecha_fin_calc))
+    ].copy()
+else:
+    # Sin filtro de periodo - usar fechas manuales
+    df_f = df[
+        (df['BANCO'].isin(filtro_banco)) & 
+        (df['MONEDA'].isin(filtro_moneda)) &
+        (df['GIRADOR'].isin(filtro_girador)) &
+        (df['Fecha de Vencimiento'] >= pd.to_datetime(fecha_inicio)) &
+        (df['Fecha de Vencimiento'] <= pd.to_datetime(fecha_fin))
+    ].copy()
 
 # === CREAR COLUMNA PERIODO PARA GRÁFICO ===
 df_f['PERIODO'] = df_f['MES']
