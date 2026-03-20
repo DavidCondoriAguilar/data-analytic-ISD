@@ -153,9 +153,11 @@ def cargar_datos():
     df = df[df["IMPORTE"].notna()]
 
     if "NUMERO UNICO" in df.columns:
-        df.loc[df["NUMERO UNICO"].isna(), "NUMERO UNICO"] = df.loc[
-            df["NUMERO UNICO"].isna(), "Nº LETRA - FACT"
-        ]
+        mask = df["NUMERO UNICO"].isna()
+        nuevo_numero = df.loc[mask, "Nº LETRA - FACT"].fillna("")
+        vacios = nuevo_numero == ""
+        nuevo_numero.loc[vacios] = "S/N-" + df.loc[mask][vacios].index.astype(str)
+        df.loc[mask, "NUMERO UNICO"] = nuevo_numero
     df["Fecha de Vencimiento"] = pd.to_datetime(
         df["Fecha de Vencimiento"], errors="coerce"
     )
