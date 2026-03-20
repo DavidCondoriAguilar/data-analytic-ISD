@@ -518,13 +518,14 @@ with st.sidebar:
             st.session_state.filtro_vencidos = False
 
     st.markdown("---")
+    total_registros = len(df)
     st.markdown(
-        """
+        f"""
     <div style="background: rgba(16, 185, 129, 0.1); padding: 0.75rem; border-radius: 8px; border-left: 3px solid #10B981;">
         <p style="color: #10B981; margin: 0; font-size: 0.8rem; font-weight: 600;">✓ Datos Certificados 100%</p>
-        <p style="color: #94A3B8; margin: 0.25rem 0 0 0; font-size: 0.7rem;">{len(df):,} registros cargados</p>
+        <p style="color: #94A3B8; margin: 0.25rem 0 0 0; font-size: 0.7rem;">{total_registros:,} registros cargados</p>
     </div>
-    """.format(len(df)),
+    """,
         unsafe_allow_html=True,
     )
 
