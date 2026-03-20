@@ -11,7 +11,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from io import BytesIO
-from reportlab.lib import colors
+from reportlab.lib import colors as rl_colors
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -201,7 +201,7 @@ def generar_pdf_profesional(df_f, tipo_cambio, totales):
         "CustomTitle",
         parent=styles["Heading1"],
         fontSize=24,
-        textColor=colors.HexColor("#1E3A5F"),
+        textColor=rl_colors.HexColor("#1E3A5F"),
         alignment=TA_CENTER,
         spaceAfter=20,
     )
@@ -209,7 +209,7 @@ def generar_pdf_profesional(df_f, tipo_cambio, totales):
         "CustomSubtitle",
         parent=styles["Normal"],
         fontSize=12,
-        textColor=colors.HexColor("#666666"),
+        textColor=rl_colors.HexColor("#666666"),
         alignment=TA_CENTER,
         spaceAfter=30,
     )
@@ -242,21 +242,21 @@ def generar_pdf_profesional(df_f, tipo_cambio, totales):
     resumen_table.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1E3A5F")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("BACKGROUND", (0, 0), (-1, 0), rl_colors.HexColor("#1E3A5F")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), rl_colors.white),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTSIZE", (0, 0), (-1, 0), 12),
                 ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
-                ("BACKGROUND", (0, 1), (-1, -1), colors.HexColor("#F5F5F5")),
+                ("BACKGROUND", (0, 1), (-1, -1), rl_colors.HexColor("#F5F5F5")),
                 ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
                 ("FONTSIZE", (0, 1), (-1, -1), 10),
-                ("GRID", (0, 0), (-1, -1), 1, colors.HexColor("#DDDDDD")),
+                ("GRID", (0, 0), (-1, -1), 1, rl_colors.HexColor("#DDDDDD")),
                 (
                     "ROWBACKGROUNDS",
                     (0, 1),
                     (-1, -1),
-                    [colors.white, colors.HexColor("#F5F5F5")],
+                    [rl_colors.white, rl_colors.HexColor("#F5F5F5")],
                 ),
             ]
         )
@@ -288,18 +288,18 @@ def generar_pdf_profesional(df_f, tipo_cambio, totales):
     banco_table.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#3B82F6")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("BACKGROUND", (0, 0), (-1, 0), rl_colors.HexColor("#3B82F6")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), rl_colors.white),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTSIZE", (0, 0), (-1, 0), 11),
                 ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
-                ("GRID", (0, 0), (-1, -1), 1, colors.HexColor("#DDDDDD")),
+                ("GRID", (0, 0), (-1, -1), 1, rl_colors.HexColor("#DDDDDD")),
                 (
                     "ROWBACKGROUNDS",
                     (0, 1),
                     (-1, -1),
-                    [colors.white, colors.HexColor("#F5F5F5")],
+                    [rl_colors.white, rl_colors.HexColor("#F5F5F5")],
                 ),
             ]
         )
@@ -334,18 +334,18 @@ def generar_pdf_profesional(df_f, tipo_cambio, totales):
     girador_table.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#10B981")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("BACKGROUND", (0, 0), (-1, 0), rl_colors.HexColor("#10B981")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), rl_colors.white),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTSIZE", (0, 0), (-1, 0), 11),
                 ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
-                ("GRID", (0, 0), (-1, -1), 1, colors.HexColor("#DDDDDD")),
+                ("GRID", (0, 0), (-1, -1), 1, rl_colors.HexColor("#DDDDDD")),
                 (
                     "ROWBACKGROUNDS",
                     (0, 1),
                     (-1, -1),
-                    [colors.white, colors.HexColor("#F5F5F5")],
+                    [rl_colors.white, rl_colors.HexColor("#F5F5F5")],
                 ),
             ]
         )
@@ -371,18 +371,18 @@ def generar_pdf_profesional(df_f, tipo_cambio, totales):
     antiguedad_table.setStyle(
         TableStyle(
             [
-                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#F59E0B")),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("BACKGROUND", (0, 0), (-1, 0), rl_colors.HexColor("#F59E0B")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), rl_colors.white),
                 ("ALIGN", (0, 0), (-1, -1), "CENTER"),
                 ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
                 ("FONTSIZE", (0, 0), (-1, 0), 11),
                 ("BOTTOMPADDING", (0, 0), (-1, 0), 10),
-                ("GRID", (0, 0), (-1, -1), 1, colors.HexColor("#DDDDDD")),
+                ("GRID", (0, 0), (-1, -1), 1, rl_colors.HexColor("#DDDDDD")),
                 (
                     "ROWBACKGROUNDS",
                     (0, 1),
                     (-1, -1),
-                    [colors.white, colors.HexColor("#F5F5F5")],
+                    [rl_colors.white, rl_colors.HexColor("#F5F5F5")],
                 ),
             ]
         )
@@ -394,7 +394,7 @@ def generar_pdf_profesional(df_f, tipo_cambio, totales):
         "Footer",
         parent=styles["Normal"],
         fontSize=8,
-        textColor=colors.HexColor("#999999"),
+        textColor=rl_colors.HexColor("#999999"),
         alignment=TA_CENTER,
     )
     elements.append(
@@ -1101,7 +1101,7 @@ with tab5:
             go.Bar(
                 x=[row["RANGO_DIAS"]],
                 y=[row["IMPORTE"]],
-                marker_color=colors.get(str(row["RANGO_DIAS"]), "#3B82F6"),
+                marker_color=rl_colors.get(str(row["RANGO_DIAS"]), "#3B82F6"),
                 text=f"S/. {row['IMPORTE'] / 1_000_000:.1f}M",
                 textposition="outside",
             )
