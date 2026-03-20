@@ -19,11 +19,10 @@ ENV/
 # Logs
 *.log
 
-# Data files (keep clean, ignore raw xlsx)
+# Data files
 data/raw/*.xlsx
 data/raw/*.xls
-*.xlsx
-!requirements.txt
+!data/clean/datos_limpios.xlsx
 
 # Python cache
 .pytest_cache/
