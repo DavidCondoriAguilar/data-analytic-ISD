@@ -713,15 +713,22 @@ with tab6:
 st.markdown("---")
 
 # === DESCARGA ===
+columnas_export = [
+    'NUMERO UNICO', 'Nº LETRA - FACT', 'GIRADOR', 'ACEPTANTE',
+    'Fecha de Vencimiento', 'DIAS VENCIDOS', 'MONEDA', 'IMPORTE',
+    'DOLARES', 'BANCO', 'PRODUCTO', 'CONDICION DEUDA'
+]
+df_export = df_f[columnas_export].copy()
+
 col_d1, col_d2 = st.columns(2)
 with col_d1:
-    csv = df_f.to_csv(index=False).encode('utf-8')
+    csv = df_export.to_csv(index=False).encode('utf-8')
     st.download_button("📥 Descargar CSV", csv, f"reporte_sueno_dorado_{datetime.now().strftime('%Y%m%d')}.csv", "text/csv", use_container_width=True)
 
 with col_d2:
     buffer = BytesIO()
     with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-        df_f.to_excel(writer, index=False, sheet_name='Datos')
+        df_export.to_excel(writer, index=False, sheet_name='Datos')
     buffer.seek(0)
     st.download_button("📊 Descargar Excel", buffer, f"reporte_sueno_dorado_{datetime.now().strftime('%Y%m%d')}.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", use_container_width=True)
 
