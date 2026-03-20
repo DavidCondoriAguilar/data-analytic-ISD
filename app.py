@@ -1101,7 +1101,7 @@ with tab5:
             go.Bar(
                 x=[row["RANGO_DIAS"]],
                 y=[row["IMPORTE"]],
-                marker_color=rl_colors.get(str(row["RANGO_DIAS"]), "#3B82F6"),
+                marker_color=colors_rango.get(str(row["RANGO_DIAS"]), "#3B82F6"),
                 text=f"S/. {row['IMPORTE'] / 1_000_000:.1f}M",
                 textposition="outside",
             )
