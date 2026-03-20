@@ -596,15 +596,32 @@ if st.session_state.get("filtro_vencidos", False):
     st.warning("🔴 Mostrando solo documentos VENCIDOS (DIAS VENCIDOS > 0)")
 
 # === CALCULAR MÉTRICAS ===
+# Formula: IMPORTE_USD = SUMA(IMPORTE_SOLES/TC + IMPORTE_DOLARES)
 soles_total = df_f[df_f["MONEDA"] == "SOLES"]["IMPORTE"].sum()
 dolares_total = df_f[df_f["MONEDA"] == "DOLARES"]["DOLARES"].sum()
 total_equivalente_usd = df_f["IMPORTE_USD"].sum()
 total_docs = len(df_f)
-vencidos = len(df_f[df_f["DIAS VENCIDOS"] > 0])
-vencidos_monto = df_f[df_f["DIAS VENCIDOS"] > 0]["IMPORTE"].sum()
-al_dia = total_docs - vencidos
-al_dia_monto = df_f[df_f["DIAS VENCIDOS"] == 0]["IMPORTE"].sum()
 
+# Clasificacion CORRECTA por vencimiento:
+# - VENCIDOS: DIAS VENCIDOS > 0 (ya vencio)
+# - AL DIA: DIAS VENCIDOS == 0 (vence hoy)
+# - POR VENCER: DIAS VENCIDOS < 0 (todavia no vence)
+vencidos = df_f[df_f["DIAS VENCIDOS"] > 0]
+vencidos_count = len(vencidos)
+vencidos_monto = vencidos["IMPORTE"].sum()
+
+al_dia = df_f[df_f["DIAS VENCIDOS"] == 0]
+al_dia_count = len(al_dia)
+al_dia_monto = al_dia["IMPORTE"].sum()
+
+por_vencer = df_f[df_f["DIAS VENCIDOS"] < 0]
+por_vencer_count = len(por_vencer)
+por_vencer_monto = por_vencer["IMPORTE"].sum()
+
+# Riesgos (solo documentos vencidos):
+# - ALTO: > 90 dias
+# - MEDIO: 31-90 dias
+# - BAJO: 1-30 dias
 riesgo_alto = df_f[df_f["DIAS VENCIDOS"] > 90]
 riesgo_medio = df_f[(df_f["DIAS VENCIDOS"] > 30) & (df_f["DIAS VENCIDOS"] <= 90)]
 riesgo_bajo = df_f[(df_f["DIAS VENCIDOS"] > 0) & (df_f["DIAS VENCIDOS"] <= 30)]
@@ -653,7 +670,7 @@ st.markdown(
     """
 <div class="section-title">
     <h3>📋 Estado de Cobranza</h3>
-    <p>Clasificación de documentos por estado de vencimiento y nivel de riesgo</p>
+    <p>Clasificacion de documentos por estado de vencimiento y nivel de riesgo</p>
 </div>
 """,
     unsafe_allow_html=True,
@@ -661,20 +678,16 @@ st.markdown(
 
 col5, col6, col7, col8 = st.columns(4)
 with col5:
-    pct_venc = (vencidos / total_docs * 100) if total_docs > 0 else 0
+    pct_venc = (vencidos_count / total_docs * 100) if total_docs > 0 else 0
     st.metric(
         "⚠️ % Vencidos", f"{pct_venc:.1f}%", help="Porcentaje de documentos vencidos"
     )
 with col6:
-    st.metric("✅ Al Día", f"{al_dia}", f"S/. {al_dia_monto:,.0f}")
+    st.metric("✅ Al Dia", f"{al_dia_count}", f"S/. {al_dia_monto:,.0f}")
 with col7:
-    st.metric("⏰ Vencidos", f"{vencidos}", f"S/. {vencidos_monto:,.0f}")
+    st.metric("⏰ Vencidos", f"{vencidos_count}", f"S/. {vencidos_monto:,.0f}")
 with col8:
-    st.metric(
-        "🟢 Bajo Riesgo (1-30d)",
-        f"{len(riesgo_bajo)}",
-        f"S/. {riesgo_bajo['IMPORTE'].sum():,.0f}",
-    )
+    st.metric("📦 Por Vencer", f"{por_vencer_count}", f"S/. {por_vencer_monto:,.0f}")
 
 st.markdown("---")
 
@@ -1326,11 +1339,13 @@ totales_pdf = {
     "total_usd": total_equivalente_usd,
     "soles": soles_total,
     "dolares": dolares_total,
-    "vencidos": vencidos,
+    "vencidos": vencidos_count,
     "pct_venc": pct_venc,
-    "al_dia": al_dia,
+    "al_dia": al_dia_count,
+    "por_vencer": por_vencer_count,
     "riesgo_alto": len(riesgo_alto),
     "riesgo_medio": len(riesgo_medio),
+    "riesgo_bajo": len(riesgo_bajo),
 }
 
 pdf_buffer = generar_pdf_profesional(df_f, tipo_cambio, totales_pdf)
