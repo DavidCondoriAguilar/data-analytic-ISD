@@ -150,6 +150,12 @@ def cargar_datos():
     df = pd.read_excel(excel_path, sheet_name="DATA ORIGINAL", header=2)
 
     df = df[df["CONDICION DEUDA"] == "PENDIENTE DE PAGO"]
+    df = df[df["IMPORTE"].notna()]
+
+    if "NUMERO UNICO" in df.columns:
+        df.loc[df["NUMERO UNICO"].isna(), "NUMERO UNICO"] = df.loc[
+            df["NUMERO UNICO"].isna(), "Nº LETRA - FACT"
+        ]
     df["Fecha de Vencimiento"] = pd.to_datetime(
         df["Fecha de Vencimiento"], errors="coerce"
     )
