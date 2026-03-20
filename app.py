@@ -1086,7 +1086,7 @@ with tab5:
     )
 
     rango_data = df_f.groupby("RANGO_DIAS")["IMPORTE"].sum().reset_index()
-    colors = {
+    colors_rango = {
         "Al día": "#10B981",
         "1-30 días": "#3B82F6",
         "31-60 días": "#F59E0B",
