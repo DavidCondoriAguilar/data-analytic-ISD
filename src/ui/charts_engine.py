@@ -93,7 +93,7 @@ def create_category_donut(df_f):
     if "CATEGORIA" not in df_f.columns:
         fig = go.Figure()
         fig.add_annotation(text="Cargando categorías estratégicas...<br>Por favor, limpie el caché de Streamlit.", 
-                          showarrow=False, font=dict(color="#94a3b8", size=14))
+                          showarrow=False, font={"color": "#94a3b8", "size": 14})
         fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
                           xaxis=dict(visible=False), yaxis=dict(visible=False))
         return fig

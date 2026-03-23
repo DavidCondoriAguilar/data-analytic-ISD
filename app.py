@@ -190,23 +190,16 @@ st.dataframe(
     }
 )
 
-# --- CENTRO DE REPORTES ---
+# --- CENTRO DE REPORTES (BLINDADO - SOLO PDF) ---
 st.markdown("---")
 st.markdown("### 📥 Centro de Exportación Certificado")
+st.info("💡 **Reporte Dinámico:** El contenido del PDF se adapta automáticamente a lo que selecciones en los filtros de la barra lateral (Bancos, Monedas o Periodo).")
+st.caption("Solo se emiten reportes oficiales en formato PDF no editable por seguridad de auditoría.")
 
-col_pdf, col_xlsx, col_csv = st.columns(3)
+_, col_pdf, _ = st.columns([1, 1, 1])
 
 with col_pdf:
-    if st.button("📄 Generar PDF Ejecutivo", use_container_width=True):
+    if st.button("📄 Generar Reporte PDF Oficial", use_container_width=True):
         info = {"periodo": filtro_periodo, "bancos": ", ".join(filtro_banco)}
         pdf = generar_pdf_profesional(df_f, tipo_cambio, metrics, info)
-        st.download_button("Descargar Reporte PDF", pdf, "Reporte_ISD.pdf", "application/pdf", use_container_width=True)
-
-with col_xlsx:
-    buf_xl = BytesIO()
-    df_f.to_excel(buf_xl, index=False, engine='openpyxl')
-    st.download_button("📊 Descargar Excel (xlsx)", buf_xl.getvalue(), "Data_Auditoria_ISD.xlsx", use_container_width=True)
-
-with col_csv:
-    csv_data = df_f.to_csv(index=False).encode('utf-8-sig')
-    st.download_button("📝 Descargar CSV (Excel compatible)", csv_data, "Data_Backup_ISD.csv", use_container_width=True)
+        st.download_button("📩 Descargar PDF Ejecutivo", pdf, "Reporte_Auditoria_ISD.pdf", "application/pdf", use_container_width=True)
