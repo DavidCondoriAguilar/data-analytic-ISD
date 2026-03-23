@@ -6,7 +6,7 @@ DATA_RAW_DIR = BASE_DIR / "data" / "raw"
 DATA_CLEAN_DIR = BASE_DIR / "data" / "clean"
 REPORTS_DIR = BASE_DIR / "reports"
 
-EXCEL_FILE = "SALDO - FLUJO DE PAGOS 2026.xlsx"
+EXCEL_FILE = "data/clean/data-main/SALDO - FLUJO DE PAGOS 2026.xlsx"
 EXCEL_SHEET = "DATA ORIGINAL"
 SKIP_ROWS = 2
 

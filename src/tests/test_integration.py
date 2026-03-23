@@ -22,7 +22,7 @@ class TestDashboardAccuracy:
         
         total_python = df['IMPORTE'].sum()
         
-        df_manual = pd.read_excel("SALDO - FLUJO DE PAGOS 2026.xlsx", 
+        df_manual = pd.read_excel(loader.file_path, 
                                    sheet_name='DATA ORIGINAL', skiprows=2)
         df_manual = df_manual[df_manual['MONEDA'] == 'SOLES']
         df_manual['IMPORTE'] = pd.to_numeric(df_manual['IMPORTE'], errors='coerce')
@@ -39,7 +39,7 @@ class TestDashboardAccuracy:
         
         total_python = df['DOLARES'].sum()
         
-        df_manual = pd.read_excel("SALDO - FLUJO DE PAGOS 2026.xlsx",
+        df_manual = pd.read_excel(loader.file_path,
                                    sheet_name='DATA ORIGINAL', skiprows=2)
         df_manual = df_manual[df_manual['MONEDA'] == 'DOLARES']
         df_manual['DOLARES'] = pd.to_numeric(df_manual['DOLARES'], errors='coerce')
@@ -53,7 +53,7 @@ class TestDashboardAccuracy:
         df = loader.cargar()
         df = df[df['CONDICION DEUDA'] == 'PENDIENTE DE PAGO']
         
-        df_manual = pd.read_excel("SALDO - FLUJO DE PAGOS 2026.xlsx",
+        df_manual = pd.read_excel(loader.file_path,
                                    sheet_name='DATA ORIGINAL', skiprows=2)
         df_manual = df_manual[df_manual['CONDICION DEUDA'] == 'PENDIENTE DE PAGO']
         
