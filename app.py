@@ -468,22 +468,75 @@ def generar_pdf_profesional(df_f, tipo_cambio, totales, filtros_info):
     elements.append(anti_table)
     elements.append(Spacer(1, 30))
 
+    # Detalle de Documentos (Nueva Sección)
+    elements.append(Spacer(1, 20))
+    elements.append(Paragraph("DETALLE DE DOCUMENTOS EXPORTADOS", styles["Heading2"]))
+    elements.append(Spacer(1, 10))
+
+    # Seleccionar columnas clave para el detalle
+    cols_detalle = ["NUMERO UNICO", "GIRADOR", "BANCO", "Fecha de Vencimiento", "DIAS VENCIDOS", "MONEDA", "IMPORTE"]
+    
+    # Header del detalle
+    detalle_header = [["ID", "GIRADOR", "BANCO", "VENCIMIENTO", "DIAS", "MON", "IMPORTE"]]
+    
+    # Limitar a los primeros 100 para no hacer el PDF infinito, o dejar que fluya
+    for _, row in df_f.head(200).iterrows(): # Limitamos a 200 por rendimiento en PDF
+        fecha_v = row["Fecha de Vencimiento"].strftime("%d/%m/%Y") if pd.notna(row["Fecha de Vencimiento"]) else "-"
+        dias = int(row["DIAS VENCIDOS"]) if pd.notna(row["DIAS VENCIDOS"]) else 0
+        detalle_header.append([
+            str(row["NUMERO UNICO"])[:10],
+            str(row["GIRADOR"])[:15],
+            str(row["BANCO"])[:10],
+            fecha_v,
+            f"{dias}d",
+            str(row["MONEDA"])[:3],
+            f"{row['IMPORTE']:,.2f}"
+        ])
+
+    detalle_table = Table(detalle_header, colWidths=[60, 110, 80, 80, 40, 40, 80])
+    detalle_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), rl_colors.HexColor(PRIMARY)),
+                ("TEXTCOLOR", (0, 0), (-1, 0), rl_colors.white),
+                ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                ("ALIGN", (1, 0), (1, -1), "LEFT"),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 8),
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("GRID", (0, 0), (-1, -1), 0.5, rl_colors.HexColor("#e2e8f0")),
+                (
+                    "ROWBACKGROUNDS",
+                    (0, 1),
+                    (-1, -1),
+                    [rl_colors.white, rl_colors.HexColor("#f8fafc")],
+                ),
+            ]
+        )
+    )
+    elements.append(detalle_table)
+    if len(df_f) > 200:
+        elements.append(Paragraph(f"... y {len(df_f)-200} documentos mas (solo se muestran los primeros 200 en el PDF)", styles["Italic"]))
+
+    elements.append(Spacer(1, 30))
+
     # Footer minimalista
     footer_data = [
         [
-            "Sueño Dorado ISD",
-            f"TC: S/. {tipo_cambio:.2f}",
-            datetime.now().strftime("%H:%M"),
+            "Sueño Dorado ISD | Reporte Certificado",
+            f"Filtros: {filtros_info.get('bancos')} | {filtros_info.get('monedas')}",
+            f"Página 1", # Simplificado por ahora
         ]
     ]
-    footer_table = Table(footer_data, colWidths=[200, 200, 100])
+    footer_table = Table(footer_data, colWidths=[200, 300, 100])
     footer_table.setStyle(
         TableStyle(
             [
                 ("ALIGN", (0, 0), (0, 0), "LEFT"),
                 ("ALIGN", (1, 0), (1, 0), "CENTER"),
                 ("ALIGN", (2, 0), (2, 0), "RIGHT"),
-                ("FONTSIZE", (0, 0), (-1, 0), 8),
+                ("FONTSIZE", (0, 0), (-1, 0), 7),
                 ("TEXTCOLOR", (0, 0), (-1, 0), rl_colors.HexColor(GRAY)),
                 ("LINEABOVE", (0, 0), (-1, 0), 0.5, rl_colors.HexColor("#e2e8f0")),
                 ("TOPPADDING", (0, 0), (-1, 0), 10),
@@ -678,9 +731,11 @@ with st.sidebar:
     filtro_producto = st.multiselect("Producto", options=productos, default=productos)
 
     st.markdown("---")
-    st.markdown("### Periodo")
+    st.markdown("### 📅 Periodo de Vencimiento")
+    
+    # UI Mejorada para Periodos
     filtro_periodo = st.selectbox(
-        "Seleccionar:",
+        "Filtro Rapido:",
         [
             "Todo",
             "Solo Vencidos",
@@ -691,19 +746,30 @@ with st.sidebar:
             "Vencidos +7 dias",
             "Vencidos +30 dias",
             "Vencidos +90 dias",
-            "Rango Personalizado",
+            "Personalizar Rango",
         ],
+        index=0,
+        help="Selecciona un intervalo de tiempo predefinido o usa el calendario para mayor precision."
     )
 
-    if filtro_periodo == "Rango Personalizado":
-        st.markdown("**Calendario:**")
-        col_cal1, col_cal2 = st.columns(2)
-        with col_cal1:
-            fecha_inicio = st.date_input(
-                "Desde:", datetime.now().date() - timedelta(days=30)
-            )
-        with col_cal2:
-            fecha_fin = st.date_input("Hasta:", datetime.now().date())
+    # Mostrar siempre el calendario si se selecciona "Personalizar Rango" o como opción visible
+    if filtro_periodo == "Personalizar Rango":
+        st.markdown("**Selecciona Intervalo:**")
+        fecha_hoy = datetime.now().date()
+        fecha_rango = st.date_input(
+            "Rango de Fechas:",
+            value=(fecha_hoy - timedelta(days=30), fecha_hoy),
+            help="Haz clic para abrir el calendario y seleccionar el inicio y fin."
+        )
+        
+        if isinstance(fecha_rango, tuple) and len(fecha_rango) == 2:
+            fecha_inicio, fecha_fin = fecha_rango
+        else:
+            fecha_inicio = fecha_hoy - timedelta(days=30)
+            fecha_fin = fecha_hoy
+            st.info("💡 Por favor, selecciona una fecha de inicio y una de fin en el calendario.")
+    else:
+        st.info(f"Filtro activo: {filtro_periodo}")
 
     st.markdown("---")
 
@@ -750,7 +816,7 @@ elif filtro_periodo == "Vencidos +30 dias":
     df_f = df_f[df_f["DIAS VENCIDOS"] > 30]
 elif filtro_periodo == "Vencidos +90 dias":
     df_f = df_f[df_f["DIAS VENCIDOS"] > 90]
-elif filtro_periodo == "Rango Personalizado":
+elif filtro_periodo == "Personalizar Rango":
     df_f = df_f[
         (df_f["Fecha de Vencimiento"] >= pd.to_datetime(fecha_inicio))
         & (df_f["Fecha de Vencimiento"] <= pd.to_datetime(fecha_fin))
@@ -987,23 +1053,74 @@ totales = {
 filtro_nombre = filtro_periodo.replace(" ", "_").replace("+", "mas")
 filename = f"Reporte_ISD_{filtro_nombre}_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
 
-col_pdf, col_space = st.columns([1, 3])
+# === CENTRO DE EXPORTACIÓN (Multi-formato) ===
+st.markdown("### 📤 Centro de Exportación Pro")
+st.markdown(
+    """
+    <div style="background: rgba(59,130,246,0.05); border-radius: 8px; padding: 1rem; border: 1px solid var(--border); margin-bottom: 1.5rem;">
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin: 0;">
+            <b>Consejo de Experto:</b> Utiliza el <b>PDF</b> para presentaciones ejecutivas, 
+            el <b>Excel</b> para auditoría de campo y el <b>CSV</b> para backups masivos.
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+col_pdf, col_xlsx, col_csv = st.columns(3)
+
+# 1. EXPORTACIÓN PDF (Reporte Consolidado)
 with col_pdf:
-    if st.button("📥 Exportar PDF", use_container_width=True):
-        with st.spinner("Generando reporte PDF..."):
+    st.markdown("**Reporte Ejecutivo**")
+    st.caption("Gráficos + Resumen + Detalle")
+    if st.button("📄 Exportar PDF", use_container_width=True, help="Ideal para GERENCIA. Contiene el análisis visual y el resumen de riesgos."):
+        with st.spinner("Generando PDF..."):
             try:
-                pdf_buffer = generar_pdf_profesional(
-                    df_f, tipo_cambio, totales, filtros_info
-                )
+                pdf_buffer = generar_pdf_profesional(df_f, tipo_cambio, totales, filtros_info)
                 st.download_button(
-                    label="Descargar Reporte",
+                    label="💾 Descargar PDF",
                     data=pdf_buffer,
                     file_name=filename,
                     mime="application/pdf",
                     use_container_width=True,
                 )
+                st.success(f"PDF Certificado generado.")
             except Exception as e:
-                st.error(f"Error al generar PDF: {str(e)}")
+                st.error(f"Error PDF: {str(e)}")
+
+# 2. EXPORTACIÓN EXCEL (Análisis de Auditoría)
+with col_xlsx:
+    st.markdown("**Auditoría Excel**")
+    st.caption("Matriz de Datos + Fórmulas")
+    try:
+        buffer_xlsx = BytesIO()
+        with pd.ExcelWriter(buffer_xlsx, engine='openpyxl') as writer:
+            df_f.to_excel(writer, index=False, sheet_name='Data_Filtrada_ISD')
+        
+        st.download_button(
+            label="📊 Exportar Excel",
+            data=buffer_xlsx.getvalue(),
+            file_name=f"Auditoria_ISD_{filtro_nombre}.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            use_container_width=True,
+            help="Ideal para CONTABILIDAD. Permite realizar conciliaciones y tablas dinámicas."
+        )
+    except Exception as e:
+        st.error(f"Error Excel: {str(e)}")
+
+# 3. EXPORTACIÓN CSV (Respaldo Crudo)
+with col_csv:
+    st.markdown("**Intercambio CSV**")
+    st.caption("Carga de Datos / Backup")
+    csv_data = df_f.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label="📝 Exportar CSV",
+        data=csv_data,
+        file_name=f"Backup_ISD_{filtro_nombre}.csv",
+        mime="text/csv",
+        use_container_width=True,
+        help="Ideal para SISTEMAS. Archivo ligero de texto plano para integración con otras bases de datos."
+    )
 
 st.markdown("---")
 

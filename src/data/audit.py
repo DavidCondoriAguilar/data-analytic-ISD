@@ -1,4 +1,4 @@
-"""Sistema de logging y audit trail."""
+    """Sistema de logging y audit trail."""
 import json
 import logging
 from pathlib import Path
