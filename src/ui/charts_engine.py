@@ -86,3 +86,37 @@ def create_girador_bar(df_f):
         height=400,
     )
     return fig
+
+def create_category_donut(df_f):
+    """Crea el gráfico de rosca de distribución por categoría estratégica."""
+    # Control de errores defensivo para evitar el KeyError si no ha cargado el caché nuevo
+    if "CATEGORIA" not in df_f.columns:
+        fig = go.Figure()
+        fig.add_annotation(text="Cargando categorías estratégicas...<br>Por favor, limpie el caché de Streamlit.", 
+                          showarrow=False, font=dict(color="#94a3b8", size=14))
+        fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                          xaxis=dict(visible=False), yaxis=dict(visible=False))
+        return fig
+
+    valores = df_f.groupby("CATEGORIA")["IMPORTE"].sum().sort_values(ascending=False)
+    
+    fig = go.Figure(data=[go.Pie(
+        labels=valores.index,
+        values=valores.values,
+        hole=0.6,
+        marker_colors=["#6366f1", "#f97316", "#10b981", "#ef4444", "#94a3b8"],
+        textinfo="label+percent",
+        textposition="outside",
+        textfont=dict(color="#94a3b8"),
+        hovertemplate="<b>%{label}</b><br>S/. %{value:,.0f}<extra></extra>",
+    )])
+    
+    fig.update_layout(
+        title=dict(text="Exposición por Categoría", font=dict(color="#f8fafc", size=16), x=0.5),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        showlegend=False,
+        margin=dict(t=50, b=50, l=20, r=20),
+        height=350,
+    )
+    return fig

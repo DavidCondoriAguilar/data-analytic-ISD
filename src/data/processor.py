@@ -51,6 +51,23 @@ class DataProcessor:
             df.loc[valid_dates, "DIA"] = df.loc[valid_dates, "Fecha de Vencimiento"].dt.date
             df.loc[valid_dates, "TRIMESTRE"] = df.loc[valid_dates, "Fecha de Vencimiento"].dt.to_period("Q").astype(str)
 
+        # Semáforo de Categorización Estratégica (Senior Expert Recommendation)
+        def categorizar(row):
+            girador = str(row.get("GIRADOR", "")).upper()
+            producto = str(row.get("PRODUCTO", "")).upper()
+            
+            if "PLANILLA" in girador or "HABERES" in girador or "NÓMINA" in girador:
+                return "🔵 OPERATIVO (PLANILLA)"
+            if "SOLEDAD" in girador or "TERRENO" in girador or "ACTIVO" in producto:
+                return "🟠 INVERSIONES (ACTIVOS)"
+            if "IMPUESTOS" in girador or "SUNAT" in girador or "RENTA" in girador:
+                return "🔘 FISCAL (SUNAT)"
+            if "BANCOS" in producto or "PRESTAMO" in girador:
+                return "🔴 FINANCIERO (BANCOS)"
+            return "🟢 OPERACIÓN COMERCIAL"
+
+        df["CATEGORIA"] = df.apply(categorizar, axis=1)
+
         # Rangos de Mora
         if "DIAS VENCIDOS" in df.columns:
             df["RANGO_DIAS"] = pd.cut(
