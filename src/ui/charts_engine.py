@@ -65,16 +65,16 @@ def create_bank_donut(df_f):
 
 def create_girador_bar(df_f):
     """Crea el gráfico de top 10 giradores."""
-    top_10 = df_f.groupby("GIRADOR")["IMPORTE"].sum().sort_values(ascending=False).head(10)
+    top_10 = df_f.groupby("GIRADOR")["IMPORTE"].sum().sort_values(ascending=False).head(10).reset_index()
     
     fig = px.bar(
         top_10,
-        x=top_10.values,
-        y=top_10.index,
+        x='IMPORTE',
+        y='GIRADOR',
         orientation='h',
-        color=top_10.values,
+        color='IMPORTE',
         color_continuous_scale='Blues',
-        labels={'x': 'Monto Acumulado S/.', 'y': 'Girador'}
+        labels={'IMPORTE': 'Monto Acumulado S/.', 'GIRADOR': 'Girador'}
     )
     
     fig.update_layout(
